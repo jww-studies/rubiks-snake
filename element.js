@@ -32,5 +32,15 @@ class Element {
         this.edges.position.y += y;
         this.edges.position.z += z;
     }
+
+    rotate(x, y, z) {
+        this.mesh.rotation.x += x;
+        this.mesh.rotation.y += y;
+        this.mesh.rotation.z += z;
+
+        this.edges.rotation.x += x;
+        this.edges.rotation.y += y;
+        this.edges.rotation.z += z;
+    }
     
 }
