@@ -47,7 +47,23 @@
                 renderer.render(scene, camera);
             }
 
-            var s = new Snake(10);
+            var n = 10;
+
+            var s = new Snake(n);
+
+            for (var i = 1; i <= n; i++) {
+                var input = document.createElement('input');
+                input.type = 'range';
+                input.name = i;
+                input.addEventListener('input', (e) => {
+                    s.rotate(e.srcElement.name, Math.PI / 20);
+                })
+                document.body.appendChild(input);
+
+            }
+
+            s.rotate(0, 7);
+            //s.rotate(3, 7);
             s.addToScene(scene);
             render();
             
