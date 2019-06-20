@@ -1,6 +1,6 @@
 class Snake {
 
-    elemSize = 1.16;
+    elemSize = 1;
     selectionColor =  0x00FF00;
 
     constructor(length, color1 = 0xFFFFFF, color2 = 0x0000FF) {
@@ -15,8 +15,8 @@ class Snake {
             var mesh = i % 2 == 0 ?
                 this.generateEvenElement(color1)
                 : this.generateOddElement(color2);
+                mesh.position.x += this.elemSize * 2;
             if (i % 2 == 0) { 
-                mesh.position.y += this.elemSize;
             }
             p.add(mesh);
             p = mesh;
@@ -25,36 +25,44 @@ class Snake {
     }
 
     generateEvenElement(meshcolor) {
-        return new THREE.Mesh(new THREE.PolyhedronGeometry([
-            -1,-1,-1,
-            -1, 1,-1,
-             1, 1,-1,
-             1,-1,-1,
-            -1,-1, 1,
-             1,-1, 1
-        ], [
-            0,1,3, 2,3,1,
-            3,5,4, 0,3,4,
-            5,2,1, 1,4,5,
-            5,3,2, 0,4,1,
-        ], 0, 0),
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3( 1, 1,-1));
+        geometry.vertices.push(new THREE.Vector3( 1, 1, 1));
+        geometry.vertices.push(new THREE.Vector3( 3,-1,-1));
+        geometry.vertices.push(new THREE.Vector3( 3,-1, 1));
+        geometry.vertices.push(new THREE.Vector3(-1,-1,-1));
+        geometry.vertices.push(new THREE.Vector3(-1,-1, 1));
+        geometry.faces.push(new THREE.Face3(3,2,0));
+        geometry.faces.push(new THREE.Face3(3,0,1));
+        geometry.faces.push(new THREE.Face3(4,5,0));
+        geometry.faces.push(new THREE.Face3(1,0,5));
+        geometry.faces.push(new THREE.Face3(1,5,3));
+        geometry.faces.push(new THREE.Face3(2,4,0));
+        geometry.faces.push(new THREE.Face3(2,3,4));
+        geometry.faces.push(new THREE.Face3(3,5,4));
+        geometry.computeFaceNormals();
+        return new THREE.Mesh(geometry,
         new THREE.MeshLambertMaterial({color: meshcolor}));
     }
 
     generateOddElement(meshcolor) {
-        return new THREE.Mesh(new THREE.PolyhedronGeometry([
-            -1, 1, 1,
-            -1,-1, 1,
-             1,-1, 1,
-             1, 1, 1,
-            -1, 1,-1,
-             1, 1,-1
-        ], [
-            0,1,3, 2,3,1,
-            3,5,4, 0,3,4,
-            5,2,1, 1,4,5,
-            5,3,2, 0,4,1,
-        ], 0, 0),
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3( 1,-1,-1));
+        geometry.vertices.push(new THREE.Vector3( 1,-1, 1));
+        geometry.vertices.push(new THREE.Vector3( 3, 1,-1));
+        geometry.vertices.push(new THREE.Vector3( 3, 1, 1));
+        geometry.vertices.push(new THREE.Vector3(-1, 1,-1));
+        geometry.vertices.push(new THREE.Vector3(-1, 1, 1));
+        geometry.faces.push(new THREE.Face3(0,2,3));
+        geometry.faces.push(new THREE.Face3(1,0,3));
+        geometry.faces.push(new THREE.Face3(0,5,4));
+        geometry.faces.push(new THREE.Face3(5,0,1));
+        geometry.faces.push(new THREE.Face3(3,5,1));
+        geometry.faces.push(new THREE.Face3(0,4,2));
+        geometry.faces.push(new THREE.Face3(4,3,2));
+        geometry.faces.push(new THREE.Face3(4,5,3));
+        geometry.computeFaceNormals();
+        return new THREE.Mesh(geometry,
         new THREE.MeshLambertMaterial({color: meshcolor}));
     }
 
@@ -73,7 +81,8 @@ class Snake {
             for(var i = 0; i < index; i++) {
                 el = el.children[0];
             }
-            var v = index % 2 == 0 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 1 / Math.sqrt(2), 1 / Math.sqrt(2));
+            const direction = i % 2 == 0 ? -1 : 1;
+            var v = new THREE.Vector3(1 / Math.sqrt(2), direction / Math.sqrt(2), 0);
             el.rotateOnAxis(v, angle);
         }
     }
