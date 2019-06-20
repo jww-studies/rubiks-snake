@@ -61,8 +61,14 @@ class Snake {
         scene.add(this.head);
     }
 
-    rotate(index, angle) {
+    removeFromScene(scene) {
+        scene.remove(this.head);
+    }
+
+    rotate(i, angle) {
+        const index = parseInt(i, 0);
         if(index > 0 && index < this.length) {
+            console.log('ok');
             var el = this.head;
             for(var i = 0; i < index; i++) {
                 el = el.children[0];

@@ -11,20 +11,37 @@
     <body>
         <div class="row">
             <div id="control-div" class="col-2">
-                <h2 class="text-center my-5">Rubik's Snake</h2>
-                <div id="slider-form" class="form mx-3 my-2">
-                    <div class="form-group">
-                        <label>Chose element:</label>
-                        <select class="form-control" id="select-id"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Set angle:</label>
-                        <input id="angle" data-bind="value: angleValue" class="form-control" type="number" min="0" max="359" value="0">
-                        <input id="slider" data-bind="value: angleValue" class="custom-range" type="range" min="0" max="359" value="0">
+                <div class="mx-3 my-2">
+                    <h2 class="text-center my-5">Rubik's Snake</h2>
+                    <form class="form" id="submit-form">
+                        <div class="form-group">
+                            <label>Set lenght:</label>
+                            <div class="form-check-inline">
+                                <input id="snake-len" type="number" class="form-control" value="20" min="1">
+                                <button type="submit" class="btn btn-outline-secondary">Set</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div>
+                        <div class="form-group">
+                            <label>Chose element:</label>
+                            <select class="form-control" id="select-id"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Set angle:</label>
+                            <input data-bind="value: angleValue" class="form-control" type="number" min="0" max="359" value="0">
+                            <input data-bind="value: angleValue" class="custom-range" type="range" min="0" max="359" value="0">
+                        </div>
                     </div>
                 </div>
+                <div class="mx-3 my-auto text-center">
+                    <small class="text-muted">
+                        Proudly created by Jakub Waszkiewicz
+                    </small>
+                </div>
             </div>
-            <div class="col-10" id="main-div" class="canvas-div">
+            <div class="col-10 w-100">
+                <div id="main-div" class="canvas-div"></div>
             </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
@@ -36,23 +53,23 @@
         <script>
             const mainDiv = document.getElementById('main-div');
             const selection = document.getElementById('select-id');
-            const n = 20;
+            var n = 20;
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera(
                 75,
-                window.innerWidth / window.innerHeight,
+                mainDiv.offsetWidth / window.innerHeight,
                 0.1,
                 1000
             );
             camera.position.set(n, n, n);
             var renderer = new THREE.WebGLRenderer({antialias: true});
             renderer.setClearColor("#e5e5e5");
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(mainDiv.offsetWidth, window.innerHeight);
             var controls = new THREE.OrbitControls( camera, renderer.domElement );
             mainDiv.appendChild(renderer.domElement);
             window.addEventListener('resize', () => {
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                camera.aspect = window.innerWidth / window.innerHeight;
+                renderer.setSize(mainDiv.offsetWidth, window.innerHeight);
+                camera.aspect = mainDiv.offsetWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
             });
 
@@ -70,22 +87,39 @@
                 renderer.render(scene, camera);
             }
 
-            const s = new Snake(n);
-            const prevValues = [];
-            for (var i = 1; i <= n; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.innerHTML = 'Element ' + i;
-                selection.appendChild(option);
-                prevValues.push(0);
+            
+            var s = new Snake(n);
+            var prevValues = [];
+            const setSnake = (num) => {
+                if(num < 2 || num == null) return;
+                s.removeFromScene(scene);
+                n = num;
+                var first = selection.firstElementChild; 
+                while (first) { 
+                    first.remove(); 
+                    first = selection.firstElementChild; 
+                }
+                s = new Snake(n);
+                prevValues = [0];
+                for (var i = 1; i < n; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.innerHTML = 'Element ' + i;
+                    selection.appendChild(option);
+                    prevValues.push(0);
+                }
+                s.addToScene(scene);
             }
             
+            setSnake(20);
+            
+            
             const angle = ko.observable(0);            
-            angle.subscribe( () => {
+            angle.subscribe( (newValue) => {
                 const index = selection.value;
-                if (prevValues[index] != angle()) {
+                if (prevValues[index] != newValue) {
                     s.rotate(index, -prevValues[index] * Math.PI / 180);
-                    prevValues[index] = angle();
+                    prevValues[index] = newValue;
                     s.rotate(index, prevValues[index] * Math.PI / 180);
                 }
             });
@@ -98,10 +132,15 @@
             const viewModel = new function ViewModel() {
                 this.angleValue = angle;
             };
-              
+            
             ko.applyBindings(viewModel);
+            
+            $('#submit-form').submit((e) => {
+                e.preventDefault();
+                setSnake(document.getElementById('snake-len').value);
+                angle(0);
+            });
 
-            s.addToScene(scene);
             render();
         </script>
     </body>
