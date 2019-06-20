@@ -26,12 +26,12 @@ class Snake {
 
     generateEvenElement(meshcolor) {
         const geometry = new THREE.Geometry();
-        geometry.vertices.push(new THREE.Vector3( 1, 1,-1));
-        geometry.vertices.push(new THREE.Vector3( 1, 1, 1));
-        geometry.vertices.push(new THREE.Vector3( 3,-1,-1));
-        geometry.vertices.push(new THREE.Vector3( 3,-1, 1));
-        geometry.vertices.push(new THREE.Vector3(-1,-1,-1));
-        geometry.vertices.push(new THREE.Vector3(-1,-1, 1));
+        geometry.vertices.push(new THREE.Vector3( 1, 1,-Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3( 1, 1, Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3( 3,-1,-Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3( 3,-1, Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3(-1,-1,-Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3(-1,-1, Math.sqrt(2)));
         geometry.faces.push(new THREE.Face3(3,2,0));
         geometry.faces.push(new THREE.Face3(3,0,1));
         geometry.faces.push(new THREE.Face3(4,5,0));
@@ -47,12 +47,12 @@ class Snake {
 
     generateOddElement(meshcolor) {
         const geometry = new THREE.Geometry();
-        geometry.vertices.push(new THREE.Vector3( 1,-1,-1));
-        geometry.vertices.push(new THREE.Vector3( 1,-1, 1));
-        geometry.vertices.push(new THREE.Vector3( 3, 1,-1));
-        geometry.vertices.push(new THREE.Vector3( 3, 1, 1));
-        geometry.vertices.push(new THREE.Vector3(-1, 1,-1));
-        geometry.vertices.push(new THREE.Vector3(-1, 1, 1));
+        geometry.vertices.push(new THREE.Vector3( 1,-1,-Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3( 1,-1, Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3( 3, 1,-Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3( 3, 1, Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3(-1, 1,-Math.sqrt(2)));
+        geometry.vertices.push(new THREE.Vector3(-1, 1, Math.sqrt(2)));
         geometry.faces.push(new THREE.Face3(0,2,3));
         geometry.faces.push(new THREE.Face3(1,0,3));
         geometry.faces.push(new THREE.Face3(0,5,4));
