@@ -1,6 +1,7 @@
 class Snake {
 
     elemSize = 1.16;
+    selectionColor =  0x00FF00;
 
     constructor(length, color1 = 0xFFFFFF, color2 = 0x0000FF) {
         this.head = this.generateSnake(length, color1, color2);
@@ -68,13 +69,28 @@ class Snake {
     rotate(i, angle) {
         const index = parseInt(i, 0);
         if(index > 0 && index < this.length) {
-            console.log('ok');
             var el = this.head;
             for(var i = 0; i < index; i++) {
                 el = el.children[0];
             }
             var v = index % 2 == 0 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 1 / Math.sqrt(2), 1 / Math.sqrt(2));
             el.rotateOnAxis(v, angle);
+        }
+    }
+
+    select(i) {
+        const index = parseInt(i, 0);
+        if(index > 0 && index < this.length) {
+            if (this.selectedElement != null) {
+                this.selectedElement.material.color.setHex(this.oldColor);
+            }
+            var el = this.head;
+            for(var i = 0; i < index; i++) {
+                el = el.children[0];
+            }
+            this.oldColor = el.material.color.getHex();
+            this.selectedElement = el;
+            el.material.color.setHex(this.selectionColor);
         }
     }
 }

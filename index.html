@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label>Set angle:</label>
                             <input data-bind="value: angleValue" class="form-control" type="number" min="0" max="359" value="0">
-                            <input data-bind="value: angleValue" class="custom-range" type="range" min="0" max="359" value="0">
+                            <input data-bind="value: angleValue, valueUpdate: 'input'" class="custom-range" type="range" min="0" max="359" value="0">
                         </div>
                     </div>
                 </div>
@@ -109,24 +109,25 @@
                     prevValues.push(0);
                 }
                 s.addToScene(scene);
+                s.select(1);
             }
             
             setSnake(20);
-            
             
             const angle = ko.observable(0);            
             angle.subscribe( (newValue) => {
                 const index = selection.value;
                 if (prevValues[index] != newValue) {
-                    s.rotate(index, -prevValues[index] * Math.PI / 180);
+                    //s.rotate(index, -prevValues[index] * Math.PI / 180);
+                    s.rotate(index, (newValue - prevValues[index]) * Math.PI / 180);
                     prevValues[index] = newValue;
-                    s.rotate(index, prevValues[index] * Math.PI / 180);
                 }
             });
 
             selection.addEventListener('change', (e) => {
                 const index = selection.value;
                 angle(prevValues[index]);
+                s.select(index);
             });
             
             const viewModel = new function ViewModel() {
