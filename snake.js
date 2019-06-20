@@ -82,7 +82,7 @@ class Snake {
                 el = el.children[0];
             }
             const direction = i % 2 == 0 ? -1 : 1;
-            var v = new THREE.Vector3(1 / Math.sqrt(2), direction / Math.sqrt(2), 0);
+            var v = new THREE.Vector3(direction / Math.sqrt(2), 1 / Math.sqrt(2), 0);
             el.rotateOnAxis(v, angle);
         }
     }
