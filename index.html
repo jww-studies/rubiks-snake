@@ -22,7 +22,6 @@
                         <input id="angle" data-bind="value: angleValue" class="form-control" type="number" min="0" max="359" value="0">
                         <input id="slider" data-bind="value: angleValue" class="custom-range" type="range" min="0" max="359" value="0">
                     </div>
-                    <button id="rotate-button" class="btn btn-outline-secondary btn-block">Rotate</button>
                 </div>
             </div>
             <div class="col-10" id="main-div" class="canvas-div">
@@ -37,9 +36,6 @@
         <script>
             const mainDiv = document.getElementById('main-div');
             const selection = document.getElementById('select-id');
-            const angleInput = document.getElementById('angle');
-            const slider = document.getElementById('slider');
-            const btn = document.getElementById('rotate-button');
             const n = 20;
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera(
@@ -74,7 +70,7 @@
                 renderer.render(scene, camera);
             }
 
-            var s = new Snake(n);
+            const s = new Snake(n);
             const prevValues = [];
             for (var i = 1; i <= n; i++) {
                 const option = document.createElement('option');
@@ -84,28 +80,29 @@
                 prevValues.push(0);
             }
             
-            btn.addEventListener('click', (e) => {
+            const angle = ko.observable(0);            
+            angle.subscribe( () => {
                 const index = selection.value;
-                s.rotate(index, -prevValues[index] * Math.PI / 180);
-                s.rotate(index, angleInput.value * Math.PI / 180);
-                prevValues[index] = angleInput.value;
-            })
+                if (prevValues[index] != angle()) {
+                    s.rotate(index, -prevValues[index] * Math.PI / 180);
+                    prevValues[index] = angle();
+                    s.rotate(index, prevValues[index] * Math.PI / 180);
+                }
+            });
 
             selection.addEventListener('change', (e) => {
                 const index = selection.value;
-                angleInput.value = prevValues[index];
-                slider.value = prevValues[index];
+                angle(prevValues[index]);
             });
-
-            var viewModel = new function ViewModel() {
-
-                this.angleValue = ko.observable(0);
-              };
+            
+            const viewModel = new function ViewModel() {
+                this.angleValue = angle;
+            };
               
-              ko.applyBindings(viewModel);
+            ko.applyBindings(viewModel);
 
             s.addToScene(scene);
-            render();           
+            render();
         </script>
     </body>
 </html>
