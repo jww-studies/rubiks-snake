@@ -34,6 +34,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="mx-3">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-secondary">Last element position</li>
+                        <li class="list-group-item">
+                            <div>From graphics engine:</div>
+                        </li>
+                        <li class="list-group-item">
+                            <div>Manually calcluated:</div>
+                        </li>
+                      </ul>
+                </div>
                 <div class="mx-3 my-auto text-center">
                     <small class="text-muted">
                         Proudly created by Jakub Waszkiewicz
@@ -49,6 +60,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.1/knockout-min.js"></script>
         <script src="js/OrbitControls.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.10.3/math.js"></script>
         <script src="snake.js"></script>
         <script>
             const mainDiv = document.getElementById('main-div');
@@ -89,7 +101,6 @@
 
             
             var s = new Snake(n);
-            var prevValues = [];
             const setSnake = (num) => {
                 if(num < 2 || num == null) return;
                 s.removeFromScene(scene);
@@ -100,13 +111,11 @@
                     first = selection.firstElementChild; 
                 }
                 s = new Snake(n);
-                prevValues = [0];
                 for (var i = 1; i < n; i++) {
                     const option = document.createElement('option');
                     option.value = i;
                     option.innerHTML = 'Element ' + i;
                     selection.appendChild(option);
-                    prevValues.push(0);
                 }
                 s.addToScene(scene);
                 s.select(1);
@@ -124,17 +133,15 @@
                 }
                 if(newValue > -180 && newValue <= 180) {
                     const index = selection.value;
-                    if (prevValues[index] != newValue) {
-                        //s.rotate(index, -prevValues[index] * Math.PI / 180);
-                        s.rotate(index, (newValue - prevValues[index]) * Math.PI / 180);
-                        prevValues[index] = newValue;
-                    }
+                    s.setAngle(index, newValue);
+                    console.log(s.getLastElementPosition());
+                    console.log(s.getLastElementPosition(true));
                 }
             });
 
             selection.addEventListener('change', (e) => {
                 const index = selection.value;
-                angle(prevValues[index]);
+                angle(s.getAngle(index));
                 s.select(index);
             });
             
@@ -151,6 +158,8 @@
             });
 
             render();
+
+            console.log(s.getEvenRotationMatrix(Math.PI / 3));
         </script>
     </body>
 </html>
