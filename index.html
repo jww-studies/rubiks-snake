@@ -10,15 +10,17 @@
     </head>
     <body>
         <div class="row">
-            <div id="control-div" class="col-2">
+            <div id="control-div" class="col-2 container">
                 <div class="mx-3 my-2">
                     <h2 class="text-center my-5">Rubik's Snake</h2>
                     <form class="form" id="submit-form">
-                        <div class="form-group">
+                        <div class="form-group ">
                             <label>Set lenght:</label>
-                            <div class="form-check-inline">
-                                <input id="snake-len" type="number" class="form-control" value="24" min="1">
-                                <button type="submit" class="btn btn-outline-secondary">Set</button>
+                            <div class="container">
+                                <div class="form row">
+                                    <input id="snake-len" type="number" class="form-control col-md-8" value="24" min="1">
+                                    <button type="submit" class="btn btn-outline-secondary col-md-4">Set</button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -34,18 +36,29 @@
                         </div>
                     </div>
                 </div>
-                <div class="mx-3">
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-secondary">Last element position</li>
-                        <li class="list-group-item">
-                            <div>From graphics engine:</div>
-                        </li>
-                        <li class="list-group-item">
-                            <div>Manually calcluated:</div>
-                        </li>
-                      </ul>
+                <div class="container">
+                    <label>Last element position:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">X:</span>
+                        </div>
+                        <input id="x-position" class="form-control" type="number" step="0.01">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Y:</span>
+                        </div>
+                        <input id="y-position" class="form-control" type="number" step="0.01">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Z:</span>
+                        </div>
+                        <input id="z-position" class="form-control" type="number" step="0.01">
+                    </div>
+                    <button class="btn btn-outline-secondary btn-block" disabled>Set position</button>
                 </div>
-                <div class="mx-3 my-auto text-center">
+                <div class="mt-5 text-center">
                     <small class="text-muted">
                         Proudly created by Jakub Waszkiewicz
                     </small>
@@ -88,6 +101,12 @@
             var light = new THREE.PointLight(0xFFFFFF);
             light.position.set(camera.position.x, camera.position.y, camera.position.z);
             scene.add(light);
+
+            var vectorToString = function(v) {
+                return 'X: ' + Math.round(v.x * 100) / 100 +
+                        ' Y: ' + Math.round(v.y * 100) / 100 +
+                        ' Z: ' + Math.round(v.z * 100) / 100;
+            }
             
             var render = function() {
                 requestAnimationFrame(render);
@@ -99,7 +118,12 @@
                 renderer.render(scene, camera);
             }
 
-            
+            var updatePosition = function(v) {
+                document.getElementById('x-position').value = Math.round(v.x * 100) / 100;
+                document.getElementById('y-position').value = Math.round(v.y * 100) / 100;
+                document.getElementById('z-position').value = Math.round(v.z * 100) / 100;
+            }
+
             var s = new Snake(n);
             const setSnake = (num) => {
                 if(num < 2 || num == null) return;
@@ -119,6 +143,7 @@
                 }
                 s.addToScene(scene);
                 s.select(1);
+                updatePosition(s.getLastElementPosition(true));
             }
 
             setSnake(24);
@@ -134,8 +159,7 @@
                 if(newValue > -180 && newValue <= 180) {
                     const index = selection.value;
                     s.setAngle(index, newValue);
-                    console.log(s.getLastElementPosition());
-                    console.log(s.getLastElementPosition(true));
+                    updatePosition(s.getLastElementPosition(true));
                 }
             });
 
@@ -158,8 +182,6 @@
             });
 
             render();
-
-            console.log(s.getEvenRotationMatrix(Math.PI / 3));
         </script>
     </body>
 </html>

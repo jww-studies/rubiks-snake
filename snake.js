@@ -155,6 +155,8 @@ class Snake {
             const lastElement = math.multiply(resultMatrix, math.matrix([[2 * (this.length - 1)], [0], [0], [1]]));
             return new THREE.Vector3(math.subset(lastElement, math.index(0,0)), math.subset(lastElement, math.index(1,0)), math.subset(lastElement, math.index(2,0)));
         } else {
+            this.head.updateMatrix();
+            this.head.updateMatrixWorld(true);
             return this.tail.localToWorld(new THREE.Vector3(0,0,0));
         }
     }
