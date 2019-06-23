@@ -126,9 +126,11 @@
 
             var s = new Snake(n);
             const setSnake = (num) => {
-                if(num < 2 || num == null) return;
+                if (num == null) return;
+                const tmp = parseInt(num, 0);
+                if (tmp < 2) return;
                 s.removeFromScene(scene);
-                n = num;
+                n = tmp;
                 var first = selection.firstElementChild; 
                 while (first) { 
                     first.remove(); 

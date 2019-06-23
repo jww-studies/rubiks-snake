@@ -79,8 +79,8 @@ class Snake {
         scene.remove(this.head);
     }
 
-    rotate(i, angle) {
-        const index = parseInt(i, 0);
+    rotate(index, angle) {
+        //const index = parseInt(i, 0);
         if(index > 0 && index < this.length) {
             var el = this.head;
             for(var i = 0; i < index; i++) {
@@ -93,27 +93,24 @@ class Snake {
         }
     }
 
-    setAngle(i, angle) {
-        const index = parseInt(i, 0);
-        if(index > 0 && index < this.length) {
+    setAngle(index, angle) {
+        if(parseInt(index, 0) > 0 && parseInt(index, 0) < this.length) {
             if(this.angles[index] !== angle) {
-                this.rotate(i, (angle - this.angles[index]) * Math.PI / 180);
+                this.rotate(index, (angle - this.angles[index]) * Math.PI / 180);
                 this.angles[index] = angle;
             }
         }
     }
 
-    getAngle(i) {
-        const index = parseInt(i, 0);
-        if(index > 0 && index < this.length) {
+    getAngle(index) {
+        if(parseInt(index, 0) > 0 && parseInt(index, 0) < this.length) {
             return this.angles[index];
         }
         return 0;
     }
 
-    select(i) {
-        const index = parseInt(i, 0);
-        if(index > 0 && index < this.length) {
+    select(index) {
+        if(parseInt(index, 0) > 0 && parseInt(index, 0) < this.length) {
             if (this.selectedElement != null) {
                 this.selectedElement.material.color.setHex(this.oldColor);
             }
@@ -142,6 +139,7 @@ class Snake {
     }
 
     getLastElementPosition(manuallyCalculated = false) {
+        console.log(this.length);
         if(manuallyCalculated) {
             var resultMatrix = math.identity(4);
             for (var i = 1; i < this.length; ++i) {
