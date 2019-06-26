@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="row">
-            <div id="control-div" class="col-2 container">
+            <div id="control-div" class="col-lg-2 container">
                 <div class="mx-3 my-2">
                     <h2 class="text-center my-5">Rubik's Snake</h2>
                     <form class="form" id="submit-form">
@@ -64,7 +64,7 @@
                     </small>
                 </div>
             </div>
-            <div class="col-10 w-100">
+            <div class="col-lg-10 w-100">
                 <div id="main-div" class="canvas-div"></div>
             </div>
         </div>
@@ -152,6 +152,7 @@
             
             const angle = ko.observable(0);            
             angle.subscribe( (newValue) => {
+
                 if(newValue > 180) {
                     angle(180);
                 }
@@ -184,6 +185,7 @@
             });
 
             render();
+            //s.test();
         </script>
     </body>
 </html>
