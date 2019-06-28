@@ -203,8 +203,8 @@ class Snake {
     }
 
     getDerrivativeApproximation(anglesArray) {
-        const h = 15;
-        var derrivativeMatrix = math.zeros(anglesArray.length - 1, anglesArray.length - 1);
+        const h = 0.0001;
+        var derrivativeMatrix = math.zeros(3, anglesArray.length - 1);
         for (var i = 0; i < anglesArray.length - 1; i++) {
             const anglesArrayPlusH = anglesArray.slice(0);
             anglesArrayPlusH[i + 1] += h;
@@ -213,7 +213,7 @@ class Snake {
             const F = math.multiply(math.subtract(F1, F2), 1 / h);
             derrivativeMatrix = math.subset(derrivativeMatrix, math.index([0, 1, 2], i), math.subset(F, math.index([0, 1, 2], 0)));
         }
-        //console.log(math.det(derrivativeMatrix));
+        console.log(math.det(derrivativeMatrix));
         return derrivativeMatrix;
     }
 
@@ -233,7 +233,8 @@ class Snake {
             for (var j = 1; j < arr.length; j++) {
                 arr[j] = (arr[j] +  math.subset(nextarr, math.index(j - 1, 0))) % 360 ;
             }
-            console.log(this.getLastElementPositionHelper(arr));
+            console.log(arr);
+            //console.log(this.getLastElementPositionHelper(arr));
         }
     }
 
