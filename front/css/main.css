@@ -1,0 +1,15 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.canvas-div {
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+}
