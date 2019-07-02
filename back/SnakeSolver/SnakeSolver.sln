@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnakeSolver", "SnakeSolver\SnakeSolver.csproj", "{E8B024A4-6913-4EF7-8F58-3BA82D99DDF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A8A1098D-283C-4CC8-BB23-40F3BFA76F83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{F768D859-BFF2-43CE-98EE-C934DC21FE9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8B024A4-6913-4EF7-8F58-3BA82D99DDF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8B024A4-6913-4EF7-8F58-3BA82D99DDF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8B024A4-6913-4EF7-8F58-3BA82D99DDF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8B024A4-6913-4EF7-8F58-3BA82D99DDF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8A1098D-283C-4CC8-BB23-40F3BFA76F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8A1098D-283C-4CC8-BB23-40F3BFA76F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8A1098D-283C-4CC8-BB23-40F3BFA76F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8A1098D-283C-4CC8-BB23-40F3BFA76F83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F768D859-BFF2-43CE-98EE-C934DC21FE9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F768D859-BFF2-43CE-98EE-C934DC21FE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F768D859-BFF2-43CE-98EE-C934DC21FE9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F768D859-BFF2-43CE-98EE-C934DC21FE9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E5D78C46-C3C6-4C23-BF18-EA692E74BF50}
+	EndGlobalSection
+EndGlobal
