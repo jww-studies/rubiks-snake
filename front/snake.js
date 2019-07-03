@@ -8,7 +8,7 @@ class Snake {
         this.head = tuple.head;
         this.tail = tuple.tail;
         this.length = length;
-        this.angles = new Array(this.length).fill(0);
+        this.angles = new Array(this.length - 1).fill(0);
     }
 
     //#region generation
@@ -116,12 +116,12 @@ class Snake {
     }
 
     rotate(index, angle) {
-        if (this.inRange(index, 1, this.length - 1)) {
-            var el = this.head;
+        if (this.inRange(index, 0, this.length - 1)) {
+            var el = this.head.children[0];
             for (var i = 0; i < index; i++) {
                 el = el.children[0];
             }
-            const direction = i % 2 == 0 ? -1 : 1;
+            const direction = i % 2 != 0 ? -1 : 1;
             var v = new THREE.Vector3(direction / Math.sqrt(2), 1 / Math.sqrt(2), 0);
             el.rotateOnAxis(v, angle);
             el.updateMatrixWorld(true);
@@ -129,7 +129,7 @@ class Snake {
     }
 
     setAngle(index, angle) {
-        if (this.inRange(index, 1, this.length - 1)) {
+        if (this.inRange(index, 0, this.length - 1)) {
             if (this.angles[index] !== angle) {
                 this.rotate(index, (angle - this.angles[index]) * Math.PI / 180);
                 this.angles[index] = angle;
@@ -138,18 +138,18 @@ class Snake {
     }
 
     getAngle(index) {
-        if (this.inRange(index, 1, this.length - 1)) {
+        if (this.inRange(index, 0, this.length - 1)) {
             return this.angles[index];
         }
         return 0;
     }
 
     select(index) {
-        if (this.inRange(index, 1, this.length - 1)) {
+        if (this.inRange(index, 0, this.length - 1)) {
             if (this.selectedElement != null) {
                 this.selectedElement.material.color.setHex(this.oldColor);
             }
-            var el = this.head;
+            var el = this.head.children[0];
             for (var i = 0; i < index; i++) {
                 el = el.children[0];
             }
@@ -161,45 +161,15 @@ class Snake {
 
     //#endregion
 
-    getEvenRotationMatrix(alpha) {
-        return math.matrix([[0.5 * (1 + Math.cos(alpha)), -0.5 * (1 - Math.cos(alpha)), 1 / Math.sqrt(2) * Math.sin(alpha), 0],
-        [-0.5 * (1 - Math.cos(alpha)), 0.5 * (1 + Math.cos(alpha)), 1 / Math.sqrt(2) * Math.sin(alpha), 0],
-        [-1 / Math.sqrt(2) * Math.sin(alpha), -1 / Math.sqrt(2) * Math.sin(alpha), Math.cos(alpha), 0],
-        [0, 0, 0, 1]]);
-    }
-
-    getOddRotationMatrix(alpha) {
-        return math.matrix([[0.5 * (1 + Math.cos(alpha)), 0.5 * (1 - Math.cos(alpha)), 1 / Math.sqrt(2) * Math.sin(alpha), 0],
-        [0.5 * (1 - Math.cos(alpha)), 0.5 * (1 + Math.cos(alpha)), -1 / Math.sqrt(2) * Math.sin(alpha), 0],
-        [-1 / Math.sqrt(2) * Math.sin(alpha), 1 / Math.sqrt(2) * Math.sin(alpha), Math.cos(alpha), 0],
-        [0, 0, 0, 1]]);
-    }
-
     getLastElementPosition(manuallyCalculated = false) {
         if (manuallyCalculated) {
-            const lastElement = this.getLastElementPositionHelper(this.angles);
-            return new THREE.Vector3(math.subset(lastElement, math.index(0, 0)), math.subset(lastElement, math.index(1, 0)), math.subset(lastElement, math.index(2, 0)));
+            
+            //const positionM = getPosition()
         } else {
             this.head.updateMatrix();
             this.head.updateMatrixWorld(true);
             return this.tail.localToWorld(new THREE.Vector3(this.elemSize / 2, 0, 0));
         }
-    }
-
-    getLastElementPositionHelper(anglesArray) {
-        if (anglesArray !== null && anglesArray.length === this.length) {
-            var resultMatrix = math.identity(4);
-            for (var i = 1; i < anglesArray.length; ++i) {
-                const ang = anglesArray[i] * Math.PI / 180;
-                const rotationMatrix = i % 2 == 0 ? this.getEvenRotationMatrix(ang) : this.getOddRotationMatrix(ang);
-                const dist = this.elemSize * (i - 0.5);
-                const translationMatrix1 = math.subset(math.identity(4), math.index(0, 3), -dist);
-                const translationMatrix2 = math.subset(math.identity(4), math.index(0, 3), dist);
-                resultMatrix = math.multiply(resultMatrix, math.multiply(translationMatrix2, math.multiply(rotationMatrix, translationMatrix1)));
-            }
-            return math.multiply(resultMatrix, math.matrix([[this.elemSize * (this.length - 1)], [0], [0], [1]]));
-        }
-        return null;
     }
 
     getDerrivativeApproximation(anglesArray) {
@@ -213,15 +183,20 @@ class Snake {
             const F = math.multiply(math.subtract(F1, F2), 1 / h);
             derrivativeMatrix = math.subset(derrivativeMatrix, math.index([0, 1, 2], i), math.subset(F, math.index([0, 1, 2], 0)));
         }
-        console.log(math.det(derrivativeMatrix));
         return derrivativeMatrix;
     }
 
     getNextApproximation(anglesArray, position) {
         var derrivativeMatrix = this.getDerrivativeApproximation(anglesArray);
-        var prevSolution = math.subtract(math.matrix([[position[0]], [position[1]], [position[2]], [1]]), this.getLastElementPositionHelper(anglesArray)).resize([anglesArray.length - 1, 1]);
-        //console.log(prevSolution);
-        var result =  math.lusolve(derrivativeMatrix, prevSolution);
+        var prevSolution = math.subset(math.subtract(math.matrix([[position[0]], [position[1]], [position[2]], [1]]), this.getLastElementPositionHelper(anglesArray)), math.index(0, math.range(0,2)));//.resize([anglesArray.length - 1, 1]);
+        var qr = math.qr(math.transpose(derrivativeMatrix));
+        //var invR = math.inv(qr.R);
+        console.log(prevSolution);
+        console.log(qr);
+        var newR = math.subset(qr.R, math.index(math.range(0,3), math.range(0,3)));
+        var tmpR = math.zeros(anglesArray.length - 1, 3);
+        math.subset(tmpR,math.index(math.range(0,3), math.range(0,3)), math.multiply(math.transpose(math.inv(newR)), prevSolution));
+        console.log(tmpR);
         return result;
     }
 
