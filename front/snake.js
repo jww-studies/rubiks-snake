@@ -163,27 +163,14 @@ class Snake {
 
     getLastElementPosition(manuallyCalculated = false) {
         if (manuallyCalculated) {
-            
-            //const positionM = getPosition()
+            const anglesVector = math.transpose([math.matrix(this.angles)]);
+            const positionM = getPosition(anglesVector);
+            return math.subset(positionM, math.index(math.range(0,3), 0));
         } else {
             this.head.updateMatrix();
             this.head.updateMatrixWorld(true);
             return this.tail.localToWorld(new THREE.Vector3(this.elemSize / 2, 0, 0));
         }
-    }
-
-    getDerrivativeApproximation(anglesArray) {
-        const h = 0.0001;
-        var derrivativeMatrix = math.zeros(3, anglesArray.length - 1);
-        for (var i = 0; i < anglesArray.length - 1; i++) {
-            const anglesArrayPlusH = anglesArray.slice(0);
-            anglesArrayPlusH[i + 1] += h;
-            const F1 = this.getLastElementPositionHelper(anglesArrayPlusH);
-            const F2 = this.getLastElementPositionHelper(anglesArray);
-            const F = math.multiply(math.subtract(F1, F2), 1 / h);
-            derrivativeMatrix = math.subset(derrivativeMatrix, math.index([0, 1, 2], i), math.subset(F, math.index([0, 1, 2], 0)));
-        }
-        return derrivativeMatrix;
     }
 
     getNextApproximation(anglesArray, position) {

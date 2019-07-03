@@ -75,6 +75,7 @@
         <script src="js/OrbitControls.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.10.3/math.js"></script>
         <script src="snake.js"></script>
+        <script src="positionSolver.js"></script>
         <script>
             const mainDiv = document.getElementById('main-div');
             const selection = document.getElementById('select-id');
@@ -145,7 +146,7 @@
                 }
                 s.addToScene(scene);
                 s.select(0);
-                updatePosition(s.getLastElementPosition(false));
+                updatePosition(s.getLastElementPosition(true));
             }
 
             setSnake(24);
@@ -162,7 +163,7 @@
                 if(newValue > -180 && newValue <= 180) {
                     const index = selection.value;
                     s.setAngle(index, newValue);
-                    updatePosition(s.getLastElementPosition(false));
+                    updatePosition(s.getLastElementPosition(true));
                 }
             });
 
