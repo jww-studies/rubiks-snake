@@ -164,7 +164,7 @@ class Snake {
     getLastElementPosition(manuallyCalculated = false) {
         if (manuallyCalculated) {
             const anglesVector = math.transpose([math.matrix(this.angles)]);
-            const positionM = getPosition(anglesVector);
+            const positionM = getPosition(anglesVector, 23);
             return math.subset(positionM, math.index(math.range(0,3), 0));
         } else {
             this.head.updateMatrix();
@@ -188,16 +188,23 @@ class Snake {
     }
 
     test() {
-        const arr = new Array(this.length).fill(60);
-        for (var i = 0; i < 2000; i++) {
-            var nextarr = this.getNextApproximation(arr, [1, 22, 0]);
-            //console.log(nextarr);
-            for (var j = 1; j < arr.length; j++) {
-                arr[j] = (arr[j] +  math.subset(nextarr, math.index(j - 1, 0))) % 360 ;
-            }
-            console.log(arr);
-            //console.log(this.getLastElementPositionHelper(arr));
+        var ang = math.transpose([math.matrix(new Array(this.length - 1).fill(0))]);
+        const position = math.transpose([math.matrix([0.5, 22.5, 0])]);
+        var dist = 10;
+        while (dist >= 2) {
+            const shift = getShift(ang, position, 23);
+            ang = math.add(ang, shift);
+            var newPosition = getPosition(ang, 23);
+            var diff = math.subtract(newPosition, position);
+            var e1 = math.subset(diff, math.index(0,0));
+            var e2 = math.subset(diff, math.index(1,0));
+            var e3 = math.subset(diff, math.index(2,0));
+            dist = Math.sqrt(e1*e1 + e2*e2 + e3* e3);
+            console.log(dist);
         }
+        var array = math.subset(ang, math.index(math.range(0, 23), 0)).map(a => a % 180);
+        console.log(array);
+        console.log(getPosition(ang, 23));
     }
 
 }
