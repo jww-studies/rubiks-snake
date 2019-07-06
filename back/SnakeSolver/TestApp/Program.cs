@@ -22,7 +22,7 @@ namespace TestApp
                 angles += result;
                 var newpos = MatrixOperations.GetPosition(angles);
                 dist = (newpos - position).L2Norm();
-                Console.WriteLine(angles);
+                Console.WriteLine($"{newpos[0]} {newpos[1]} {newpos[2]}");
             }
         }
     }

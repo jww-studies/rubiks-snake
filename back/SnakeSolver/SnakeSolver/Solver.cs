@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace SnakeSolver
@@ -20,14 +18,13 @@ namespace SnakeSolver
             }
 
             var derr = MatrixOperations.GetDerrivativeApproximation(angles);
-            var res = -MatrixOperations.GetPosition(angles) + expectedPosition;
-            var derr1 = DenseMatrix.OfArray(new double[angles.Count, angles.Count]);
-            var res1 = Vector<double>.Build.DenseOfArray(new double[angles.Count]);
-            derr1.SetSubMatrix(0, 0, derr);
-            res1.SetSubVector(0, 3, res);
+            var res = (MatrixOperations.GetPosition(angles) - expectedPosition);
 
-            var qr = derr1.QR(QRMethod.Full);
-            return qr.Solve(res1);
+            var qr = derr.Transpose().QR(QRMethod.Full);
+            var R1 = qr.R.SubMatrix(0, 3, 0, 3);
+            var tmp = Vector<double>.Build.DenseOfArray(new double[angles.Count]);
+            tmp.SetSubVector(0, 3, R1.Transpose().Inverse() * res);
+            return qr.Q * tmp;
         }
     }
 }
