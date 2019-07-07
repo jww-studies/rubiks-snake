@@ -13,18 +13,10 @@ namespace TestApp
         static void Main(string[] args)
         {
             var angles = Vector<double>.Build.DenseOfArray(new double[23]);
-            //angles[0] = 0;
             var position = Vector<double>.Build.DenseOfArray(new double[] { 0.5, 22.5, 0 });
-            double dist = 1;
 
-            while(dist > 0.01)
-            {
-                var result = Solver.GetShift(angles, position);
-                angles += result;
-                var newpos = MatrixOperations.GetPosition(angles);
-                dist = (double)(newpos - position).L2Norm();
-                Console.WriteLine($"{newpos[0]} {newpos[1]} {newpos[2]}");
-            }
+            var res = Solver.GetSolution(angles, position, 0.001, 100000);
+            Console.WriteLine(res);
         }
     }
 }
