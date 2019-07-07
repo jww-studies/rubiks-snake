@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{F768D859-BFF2-43CE-98EE-C934DC21FE9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionSolver", "FunctionSolver\FunctionSolver.csproj", "{83AB423E-820C-4353-B54F-FC2EEA7C2FA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionSolver", "FunctionSolver\FunctionSolver.csproj", "{83AB423E-820C-4353-B54F-FC2EEA7C2FA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
