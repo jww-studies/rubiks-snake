@@ -11,18 +11,21 @@ namespace Tests
     public class MatrixOperationTests
     {
         [TestMethod]
-        public void GetPositionGivenAngleArrayReturnsValidPosition()
+        [DataRow(new double[] { 180, 0, 0, 0 }, new double[] { 0.5, 3.5, 0 })]
+        [DataRow(new double[] { 180, 180, 180, 0 }, new double[] { -0.5, -0.5, 0 })]
+        [DataRow(new double[] { 90, 0, 0, 90, 0, 0, 0, 0, 90 }, new double[] { -1, 4, -5.66 })]
+        public void GetPositionGivenAngleArrayReturnsValidPosition(double[] anglesArray, double[] expectedPosition)
         {
             // Arrange
-            var angles = Vector<double>.Build.DenseOfArray(new double[] { 180, 0, 0, 0 });
+            var angles = Vector<double>.Build.DenseOfArray(anglesArray);
 
             // Act
             var result = MatrixOperations.GetPosition(angles);
 
             // Assert
-            var expected = Vector<double>.Build.DenseOfArray(new double[] { 0.5, 3.5, 0 });
+            var expected = Vector<double>.Build.DenseOfArray(expectedPosition);
             var subtract = expected.Subtract(result);
-            Assert.IsTrue(subtract.L2Norm() < 1e-15);
+            Assert.IsTrue(subtract.L2Norm() < 0.01);
         }
 
         [TestMethod]

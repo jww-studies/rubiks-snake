@@ -146,7 +146,7 @@
                 }
                 s.addToScene(scene);
                 s.select(0);
-                updatePosition(s.getLastElementPosition(true));
+                updatePosition(s.getLastElementPosition(false));
             }
 
             setSnake(24);
@@ -163,7 +163,7 @@
                 if(newValue > -180 && newValue <= 180) {
                     const index = selection.value;
                     s.setAngle(index, newValue);
-                    updatePosition(s.getLastElementPosition(true));
+                    updatePosition(s.getLastElementPosition(false));
                 }
             });
 
@@ -186,7 +186,7 @@
             });
 
             render();
-            s.test();
+            //s.test();
         </script>
     </body>
 </html>

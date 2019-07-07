@@ -18,7 +18,7 @@ namespace SnakeSolver
             }
 
             var derr = MatrixOperations.GetDerrivativeApproximation(angles);
-            var res = (MatrixOperations.GetPosition(angles) - expectedPosition);
+            var res = (MatrixOperations.GetPosition(angles) - expectedPosition) * -1;
 
             var qr = derr.Transpose().QR(QRMethod.Full);
             var R1 = qr.R.SubMatrix(0, 3, 0, 3);
