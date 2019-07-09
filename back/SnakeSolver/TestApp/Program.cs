@@ -12,7 +12,7 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            var res = Solver.GetSolution(new double[23], new double[] { 0.5, 22.5, 0 });
+            var res = Solver.GetSolution(new double[2], new double[] { 0.5, 22.5, 0 });
             foreach(var el in res)
             {
                 Console.WriteLine(el);

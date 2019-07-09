@@ -21,11 +21,17 @@ namespace SnakeSolver
             var derr = MatrixOperations.GetDerrivativeApproximation(angles);
             var res = (MatrixOperations.GetPosition(angles) - expectedPosition) * -1;
 
-            var qr = derr.Transpose().QR(QRMethod.Full);
-            var R1 = qr.R.SubMatrix(0, 3, 0, 3);
-            var tmp = Vector<double>.Build.DenseOfArray(new double[angles.Count]);
-            tmp.SetSubVector(0, 3, R1.Transpose().Inverse() * res);
-            return qr.Q * tmp;
+            if (derr.ColumnCount > derr.RowCount)
+            {
+                var qr = derr.Transpose().QR(QRMethod.Full);
+                var R1 = qr.R.SubMatrix(0, 3, 0, 3);
+                var tmp = Vector<double>.Build.DenseOfArray(new double[angles.Count]);
+                tmp.SetSubVector(0, 3, R1.Transpose().Inverse() * res);
+                return qr.Q * tmp;
+            } else
+            {
+                return derr.QR().Solve(res);
+            }
         }
 
         public static double[] GetSolution(double[] startAnglesApproximation, double[] expectedPosition, double accuracy = 0.01, int iterationLimit = 2000)
@@ -51,7 +57,6 @@ namespace SnakeSolver
                 angles += result;
                 newPosition = MatrixOperations.GetPosition(angles);
                 dist = (newPosition - position).L2Norm();
-                //Console.WriteLine($"{newPosition[0]} {newPosition[1]} {newPosition[2]}");
             }
             int digits = Math.Max(-(int)Math.Log10(accuracy), 0);
             return dist > accuracy ? null : angles.ToArray().Select(el =>

@@ -5,6 +5,9 @@ It's web application showing 3D model of Rubik's snake which allows to:
  - get position of last element according to the first one
  - solve reverse problem - rotate particular elements to move last element to given position
 
+Reverse problem is solved by iterative Newton method with accuracy 0.01 (norm of subtraction of accurate result and approximation).
+Limit for iterations ins solving is constant and equal to 2000.
+
 Used technologies:
 
  - **frontend:**
