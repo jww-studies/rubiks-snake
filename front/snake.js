@@ -128,6 +128,18 @@ class Snake {
         }
     }
 
+    rotateAll(arr) {
+        var el = this.head.children[0];
+        for (var i = 0; i < arr.length; i++) {
+            const direction = i % 2 != 0 ? -1 : 1;
+            var v = new THREE.Vector3(direction / Math.sqrt(2), 1 / Math.sqrt(2), 0);
+            el.rotateOnAxis(v, (arr[i] - this.angles[i]) * Math.PI / 180);
+            el.updateMatrixWorld(true);
+            el = el.children[0];
+        }
+        this.angles = arr;
+    }
+
     setAngle(index, angle) {
         if (this.inRange(index, 0, this.length - 1)) {
             if (this.angles[index] !== angle) {
@@ -161,50 +173,9 @@ class Snake {
 
     //#endregion
 
-    getLastElementPosition(manuallyCalculated = false) {
-        if (manuallyCalculated) {
-            const anglesVector = math.transpose([math.matrix(this.angles)]);
-            const positionM = getPosition(anglesVector, 23);
-            return math.subset(positionM, math.index(math.range(0,3), 0));
-        } else {
-            this.head.updateMatrix();
-            this.head.updateMatrixWorld(true);
-            return this.tail.localToWorld(new THREE.Vector3(this.elemSize / 2, 0, 0));
-        }
+    getLastElementPosition() {
+        this.head.updateMatrix();
+        this.head.updateMatrixWorld(true);
+        return this.tail.localToWorld(new THREE.Vector3(this.elemSize / 2, 0, 0));
     }
-
-    getNextApproximation(anglesArray, position) {
-        var derrivativeMatrix = this.getDerrivativeApproximation(anglesArray);
-        var prevSolution = math.subset(math.subtract(math.matrix([[position[0]], [position[1]], [position[2]], [1]]), this.getLastElementPositionHelper(anglesArray)), math.index(0, math.range(0,2)));//.resize([anglesArray.length - 1, 1]);
-        var qr = math.qr(math.transpose(derrivativeMatrix));
-        //var invR = math.inv(qr.R);
-        console.log(prevSolution);
-        console.log(qr);
-        var newR = math.subset(qr.R, math.index(math.range(0,3), math.range(0,3)));
-        var tmpR = math.zeros(anglesArray.length - 1, 3);
-        math.subset(tmpR,math.index(math.range(0,3), math.range(0,3)), math.multiply(math.transpose(math.inv(newR)), prevSolution));
-        console.log(tmpR);
-        return result;
-    }
-
-    test() {
-        var ang = math.transpose([math.matrix(new Array(this.length - 1).fill(0))]);
-        const position = math.transpose([math.matrix([0.5, 22.5, 0])]);
-        var dist = 10;
-        while (dist >= 2) {
-            const shift = getShift(ang, position, 23);
-            ang = math.add(ang, shift);
-            var newPosition = getPosition(ang, 23);
-            var diff = math.subtract(newPosition, position);
-            var e1 = math.subset(diff, math.index(0,0));
-            var e2 = math.subset(diff, math.index(1,0));
-            var e3 = math.subset(diff, math.index(2,0));
-            dist = Math.sqrt(e1*e1 + e2*e2 + e3* e3);
-            console.log(dist);
-        }
-        var array = math.subset(ang, math.index(math.range(0, 23), 0)).map(a => a % 180);
-        console.log(array);
-        console.log(getPosition(ang, 23));
-    }
-
 }
