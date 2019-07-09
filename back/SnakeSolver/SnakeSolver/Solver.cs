@@ -28,7 +28,7 @@ namespace SnakeSolver
             return qr.Q * tmp;
         }
 
-        public static double[] GetSolution(double[] startAnglesApproximation, double[] expectedPosition, double accuracy = 0.01, int iterationLimit = 1000000)
+        public static double[] GetSolution(double[] startAnglesApproximation, double[] expectedPosition, double accuracy = 0.01, int iterationLimit = 2000)
         {
             if(startAnglesApproximation.Length < 1)
             {
@@ -54,7 +54,12 @@ namespace SnakeSolver
                 //Console.WriteLine($"{newPosition[0]} {newPosition[1]} {newPosition[2]}");
             }
             int digits = Math.Max(-(int)Math.Log10(accuracy), 0);
-            return dist > accuracy ? null : angles.ToArray().Select(el => Math.Round(mod(el, 360) - 180, digits)).ToArray();
+            return dist > accuracy ? null : angles.ToArray().Select(el =>
+                {
+                    var rem = (el - 180) % 360;
+                    if (rem < 0) rem += 360;
+                    return Math.Round(rem - 180, digits);
+                }).ToArray();
         }
 
         private static double mod(double a, double n)
